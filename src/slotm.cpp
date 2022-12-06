@@ -1,9 +1,12 @@
 #include"slotm.h"
 
-SOLTMACHINE::SOLTMACHINE( PIN _Motion_Sensor , PIN _Start_Handle ,
-                          uint16_t _MAX_CLT = MAX_CONTINUOUS_LOST_TIME ){
-    Motion_Sensor = _Motion_Sensor;
+SOLTMACHINE::SOLTMACHINE( PIN _Coin_Sensor , int _Coin_Sensor_Trigger_Signal ,  PIN _Start_Handle , int _Start_Handle_Trigger_Signal , 
+                          uint16_t _MAX_CLT ){
+    Coin_Sensor = _Coin_Sensor;
     Start_Handle  = _Start_Handle;
+
+    Coin_Sensor_Trigger_Signal  = _Coin_Sensor_Trigger_Signal;
+    Start_Handle_Trigger_Signal = _Start_Handle_Trigger_Signal;
 
     MAX_CLT = _MAX_CLT;
 
@@ -15,14 +18,3 @@ SOLTMACHINE::SOLTMACHINE( PIN _Motion_Sensor , PIN _Start_Handle ,
     return;
 }
 
-/**
- * \brief judge if start handle is pulled down (by judging the button on the top's status)
- * \return start handle (or the button) status, pulled (or pressed) as true
- */
-bool SOLTMACHINE::is_Start_Handle_pulled(){
-    if ( digitalRead( Start_Handle ) == LOW )
-    {
-        return true;
-    }
-    return false;
-}
