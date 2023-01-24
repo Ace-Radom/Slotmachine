@@ -3,6 +3,7 @@
 #include<TM1637.h>
 #include<Adafruit_NeoPixel.h>
 
+Adafruit_NeoPixel pixels = Adafruit_NeoPixel( 24 , 8 , NEO_GRB + NEO_KHZ800 );
 LiquidCrystal_I2C Lcd( 0x27 , 20 , 2 );
 TM1637 tm1637( 11 , 10 );
 
@@ -18,20 +19,29 @@ int Gen(){
 }
 
 void ls(){
-    tone( 7 , 440 );
-    delay( 500 );
     tone( 7 , 523 );
+    delay( 500 );
+    tone( 7 , 659 );
+    delay( 500 );
+    tone( 7 , 784 );
     delay( 500 );
     tone( 7 , 659 );
     delay( 500 );
     tone( 7 , 523 );
     delay( 500 );
-    tone( 7 , 440 );
+    noTone( 7 );
+}
+
+void lsf(){
+    tone( 7 , 784 );
+    delay( 500 );
+    tone( 7 , 659 );
+    delay( 500 );
+    tone( 7 , 523 );
     delay( 500 );
     noTone( 7 );
 }
 
-Adafruit_NeoPixel pixels = Adafruit_NeoPixel( 24 , 8 , NEO_GRB + NEO_KHZ800 );
 
 void LED_Ring_Show( uint8_t start_pos , uint16_t brightness ){
     pixels.begin();
@@ -104,13 +114,15 @@ void loop() {
     if ( digitalRead( PIN_A5 ) == 0 ) 
     { //HEBEL 
         Gen();
+        pixels.clear();
+        pixels.show();
         delay( 200 );
 
         int8_t n[] = { w , x , y , z };
    
-        if ( w == x && x == y && y == z)
+        if ( w == x && x == y && y == z )
         { //was passiert wenn man gewinnt
-            delay( 700 );
+            delay( 200 );
             tm1637.clearDisplay();
             tm1637.display( n );
             Lcd.clear();
@@ -119,6 +131,8 @@ void loop() {
             Lcd.print( " " );
             Lcd.print( " " );
             Lcd.print( "Gewonnen!" );
+            pixels.fill( pixels.Color( 0 , 255 , 0 ) , 0 , 24 );
+            pixels.show();
         // TON 
             ls();
 
@@ -130,7 +144,7 @@ void loop() {
             times++;
             if ( times == 5 )
             {
-                delay(700);
+                delay( 200 );
                 Lcd.clear();
                 Lcd.print(" ");
                 Lcd.print(" ");
@@ -142,6 +156,8 @@ void loop() {
                 n[3] = w;
                 tm1637.clearDisplay();
                 tm1637.display( n );
+                pixels.fill( pixels.Color( 0 , 255 , 0 ) , 0 , 24 );
+                pixels.show();
 
                 ls();
 
@@ -149,17 +165,22 @@ void loop() {
             }
             else
             {
+                delay( 200 );
                 Lcd.clear();
                 Lcd.print( "     " );
                 Lcd.print( "Schade!" );
                 tm1637.clearDisplay();
                 tm1637.display( n );
-
+                pixels.fill( pixels.Color( 255 , 0 , 0 ) , 0 , 24 );
+                pixels.show();
+                lsf();
             }
         } 
-
+    pixels.clear();
+    tm1637.clearDisplay();
 
     Lcd.clear();
+    pixels.show();
     Lcd.print( "Bitte anfangen" ); 
     }
 //  }
