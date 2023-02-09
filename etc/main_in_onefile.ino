@@ -102,6 +102,8 @@ void setup(){
     tm1637.point( POINT_OFF );
 
     pixels.begin();
+
+    pinMode(PIN_A0,INPUT_PULLUP);
 }
 
 int sp = 0;
@@ -110,9 +112,14 @@ void loop() {
     LED_Ring_Show( sp , 5 );
     pixels.show();
 
-    // if(digitalRead(3)==0) { //MÜNZ EINWURF
-    if ( digitalRead( PIN_A5 ) == 0 ) 
-    { //HEBEL 
+    if(!digitalRead(PIN_A0)) { //MÜNZ EINWURF
+
+    delay( 100 );
+    Lcd.clear();
+    Lcd.print( "Hebel eindrueck" );
+
+    while ( digitalRead( PIN_A5 ) );
+     //HEBEL 
         Gen();
         pixels.clear();
         pixels.show();
@@ -181,9 +188,9 @@ void loop() {
 
     Lcd.clear();
     pixels.show();
-    Lcd.print( "Bitte anfangen" ); 
-    }
-//  }
+    Lcd.print( "Muenze einwerfen" ); 
+    
+}
 
     sp == 23 ? sp = 0 : sp++;
 }
